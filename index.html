@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horário Outubro 2025</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Helvelica, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho */
+        header {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+        header h1 {
+            margin: 5px 0;
+            font-size: 24px;
+        }
+        header h2 {
+            margin: 5px 0;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+        /* Digital Clock */
+        .digital-clock {
+            background: #b39d74;
+            color: black;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px auto;
+            max-width: 1200px;
+            width: 95%;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .clock-display {
+            font-family: 'Courier New', monospace;
+            min-height: 24px;
+        }
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: 1px;
+            animation: typing 6s steps(80, end) infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Botão PDF */
+        .pdf-button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #downloadPdf {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #downloadPdf:hover {
+            background: #c0392b;
+        }
+
+        /* Tabela */
+        .calendar-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 auto 20px auto;
+        }
+        .calendar {
+            border-collapse: collapse;
+            min-width: 1200px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .calendar th, .calendar td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .header {
+            background: #b39d74;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .day-header {
+            background: #e0e0e0;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        .time-header {
+            background: #f0f0f0;
+            font-weight: bold;
+            text-align: right;
+            padding-right: 10px;
+            font-size: 14px;
+        }
+        .cell {
+            height: 40px;
+            min-width: 50px;
+            padding: 2px;
+        }
+
+        /* Cores dos módulos */
+        .green-light { background: #ccffcc; }
+        .green-dark { background: #99cc99; }
+        .orange { background: #ffcc99; }
+        .blue { background: #99ccff; }
+        .red-brick { background: #cc6666; }
+        .purple { background: #cc99cc; }
+        .yellow { background: #ffff99; }
+        .pink { background: #ff99cc; }
+        .brown { background: #cc9966; }
+        .gray { background: #e0e0e0; }
+
+        .cell span {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .cell-countdown {
+            display: none;
+        }
+
+        /* Blinking effect for current class */
+        .blinking {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Legenda */
+        .legend {
+            margin: 0 auto 30px auto;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 1200px;
+            width: 95%;
+        }
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border: 1px solid #999;
+        }
+
+        /* Coluna lateral */
+        .month-col {
+            background: #f0f0f0;
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            font-size: 14px;
+        }
+        .month-col .month {
+            background: black;
+            color: white;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .month-col .year {
+            background: #b39d74;
+            color: white;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .month-col .week-number {
+            background: yellow;
+            color: black;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        footer a {
+            color: #a3d9ff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 20px;
+            }
+            header h2 {
+                font-size: 18px;
+            }
+            .digital-clock {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .day-header {
+                font-size: 12px;
+            }
+            .time-header {
+                font-size: 12px;
+                padding-right: 8px;
+            }
+            .cell span {
+                font-size: 11px;
+            }
+            .legend-item {
+                font-size: 12px;
+            }
+        }
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+
+<!-- Cabeçalho -->
+<header>
+    <h1>Formação Profissional para o Mercado de Trabalho</h1>
+    <h2>Horário Outubro 2025</h2>
+</header>
+
+<!-- Botão PDF -->
+<div class="pdf-button-container">
+    <button id="downloadPdf">👉 Descarregar Horário em PDF</button>
+</div>
+
+<!-- Relógio Digital -->
+<div class="digital-clock">
+    <div class="clock-display typewriter" id="clockDisplay">Carregando...</div>
+</div>
+
+<!-- Tabela do Horário -->
+<div class="calendar-container">
+    <table class="calendar" id="scheduleTable">
+        <thead>
+            <tr>
+                <th rowspan="2" class="month-col">
+                    <div class="month">Out</div>
+                    <div class="year">2025</div>
+                    <div class="week-number">149</div>
+                </th>
+                <th colspan="23" class="header">Dia do Mês</th>
+            </tr>
+            <tr>
+                <!-- Dias da semana e números dos dias -->
+                <th class="day-header">Quarta<br>1</th>
+                <th class="day-header">Quinta<br>2</th>
+                <th class="day-header">Sexta<br>3</th>
+                <th class="day-header">Segunda<br>6</th>
+                <th class="day-header">Terça<br>7</th>
+                <th class="day-header">Quarta<br>8</th>
+                <th class="day-header">Quinta<br>9</th>
+                <th class="day-header">Sexta<br>10</th>
+                <th class="day-header">Segunda<br>13</th>
+                <th class="day-header">Terça<br>14</th>
+                <th class="day-header">Quarta<br>15</th>
+                <th class="day-header">Quinta<br>16</th>
+                <th class="day-header">Sexta<br>17</th>
+                <th class="day-header">Segunda<br>20</th>
+                <th class="day-header">Terça<br>21</th>
+                <th class="day-header">Quarta<br>22</th>
+                <th class="day-header">Quinta<br>23</th>
+                <th class="day-header">Sexta<br>24</th>
+                <th class="day-header">Segunda<br>27</th>
+                <th class="day-header">Terça<br>28</th>
+                <th class="day-header">Quarta<br>29</th>
+                <th class="day-header">Quinta<br>30</th>
+                <th class="day-header">Sexta<br>31</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 9-10 -->
+            <tr>
+                <td class="time-header">9-10</td>
+                <td class="green-dark cell" id="d1-9"><span>CPSA</span></td>
+                <td class="orange cell" id="d2-9"><span>CE3A</span></td>
+                <td class="orange cell" id="d3-9"><span>CE3C</span></td>
+                <td class="orange cell" id="d6-9"><span>CE3C</span></td>
+                <td class="green-light cell" id="d7-9"><span>CLC3</span></td>
+                <td class="gray cell" id="d8-9"><span>3</span></td>
+                <td class="orange cell" id="d9-9"><span>CE3C</span></td>
+                <td class="green-dark cell" id="d10-9"><span>7</span></td>
+                <td class="orange cell" id="d13-9"><span>CE3C</span></td>
+                <td class="yellow cell" id="d14-9"><span>4</span></td>
+                <td class="purple cell" id="d15-9"><span>2</span></td>
+                <td class="pink cell" id="d16-9"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d17-9"><span>9</span></td>
+                <td class="orange cell" id="d20-9"><span>CE3A</span></td>
+                <td class="pink cell" id="d21-9"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d22-9"><span>9</span></td>
+                <td class="purple cell" id="d23-9"><span>MTC3C</span></td>
+                <td class="cell" id="d24-9"></td>
+                <td class="red-brick cell" id="d27-9"><span>9</span></td>
+                <td class="red-brick cell" id="d28-9"><span>9</span></td>
+                <td class="green-dark cell" id="d29-9"><span>CPSA</span></td>
+                <td class="orange cell" id="d30-9"><span>CE3C</span></td>
+                <td class="red-brick cell" id="d31-9"><span>9</span></td>
+            </tr>
+            <!-- 10-11 -->
+            <tr>
+                <td class="time-header">10-11</td>
+                <td class="green-dark cell" id="d1-10"><span>CPSA</span></td>
+                <td class="orange cell" id="d2-10"><span>CE3A</span></td>
+                <td class="orange cell" id="d3-10"><span>CE3C</span></td>
+                <td class="orange cell" id="d6-10"><span>CE3C</span></td>
+                <td class="green-light cell" id="d7-10"><span>CLC3</span></td>
+                <td class="gray cell" id="d8-10"><span>3</span></td>
+                <td class="orange cell" id="d9-10"><span>CE3C</span></td>
+                <td class="green-dark cell" id="d10-10"><span>7</span></td>
+                <td class="orange cell" id="d13-10"><span>CE3C</span></td>
+                <td class="yellow cell" id="d14-10"><span>4</span></td>
+                <td class="purple cell" id="d15-10"><span>2</span></td>
+                <td class="pink cell" id="d16-10"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d17-10"><span>9</span></td>
+                <td class="orange cell" id="d20-10"><span>CE3A</span></td>
+                <td class="pink cell" id="d21-10"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d22-10"><span>9</span></td>
+                <td class="purple cell" id="d23-10"><span>MTC3C</span></td>
+                <td class="cell" id="d24-10"></td>
+                <td class="red-brick cell" id="d27-10"><span>9</span></td>
+                <td class="red-brick cell" id="d28-10"><span>9</span></td>
+                <td class="green-dark cell" id="d29-10"><span>CPSA</span></td>
+                <td class="orange cell" id="d30-10"><span>CE3C</span></td>
+                <td class="red-brick cell" id="d31-10"><span>9</span></td>
+            </tr>
+            <!-- 11-12 -->
+            <tr>
+                <td class="time-header">11-12</td>
+                <td class="green-dark cell" id="d1-11"><span>CPSA</span></td>
+                <td class="orange cell" id="d2-11"><span>CE3A</span></td>
+                <td class="green-light cell" id="d3-11"><span>CEPL</span></td>
+                <td class="orange cell" id="d6-11"><span>CE3C</span></td>
+                <td class="green-light cell" id="d7-11"><span>CLC3</span></td>
+                <td class="gray cell" id="d8-11"><span>3</span></td>
+                <td class="orange cell" id="d9-11"><span>CE3C</span></td>
+                <td class="green-dark cell" id="d10-11"><span>7</span></td>
+                <td class="orange cell" id="d13-11"><span>CE3C</span></td>
+                <td class="yellow cell" id="d14-11"><span>4</span></td>
+                <td class="purple cell" id="d15-11"><span>2</span></td>
+                <td class="pink cell" id="d16-11"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d17-11"><span>9</span></td>
+                <td class="orange cell" id="d20-11"><span>CE3A</span></td>
+                <td class="pink cell" id="d21-11"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d22-11"><span>9</span></td>
+                <td class="purple cell" id="d23-11"><span>MTC3C</span></td>
+                <td class="cell" id="d24-11"></td>
+                <td class="red-brick cell" id="d27-11"><span>9</span></td>
+                <td class="red-brick cell" id="d28-11"><span>9</span></td>
+                <td class="green-dark cell" id="d29-11"><span>CPSA</span></td>
+                <td class="orange cell" id="d30-11"><span>CE3C</span></td>
+                <td class="red-brick cell" id="d31-11"><span>9</span></td>
+            </tr>
+            <!-- 12-13 -->
+            <tr>
+                <td class="time-header">12-13</td>
+                <td class="gray cell" id="d1-12"><span>3</span></td>
+                <td class="orange cell" id="d2-12"><span>CE3A</span></td>
+                <td class="cell" id="d3-12"></td>
+                <td class="orange cell" id="d6-12"><span>CE3C</span></td>
+                <td class="green-light cell" id="d7-12"><span>CLC3</span></td>
+                <td class="gray cell" id="d8-12"><span>3</span></td>
+                <td class="green-light cell" id="d9-12"><span>CEPL</span></td>
+                <td class="green-dark cell" id="d10-12"><span>7</span></td>
+                <td class="green-light cell" id="d13-12"><span>CEPL</span></td>
+                <td class="yellow cell" id="d14-12"><span>4</span></td>
+                <td class="purple cell" id="d15-12"><span>2</span></td>
+                <td class="pink cell" id="d16-12"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d17-12"><span>9</span></td>
+                <td class="orange cell" id="d20-12"><span>CE3A</span></td>
+                <td class="pink cell" id="d21-12"><span>CD3A</span></td>
+                <td class="red-brick cell" id="d22-12"><span>9</span></td>
+                <td class="brown cell" id="d23-12"><span>MTCPL</span></td>
+                <td class="cell" id="d24-12"></td>
+                <td class="red-brick cell" id="d27-12"><span>9</span></td>
+                <td class="red-brick cell" id="d28-12"><span>9</span></td>
+                <td class="green-dark cell" id="d29-12"><span>CPSA</span></td>
+                <td class="green-light cell" id="d30-12"><span>CEPL</span></td>
+                <td class="red-brick cell" id="d31-12"><span>9</span></td>
+            </tr>
+            <!-- 13-14 -->
+            <tr>
+                <td class="time-header">13-14</td>
+                <td class="cell" id="d1-13"></td>
+                <td class="cell" id="d2-13"></td>
+                <td class="cell" id="d3-13"></td>
+                <td class="cell" id="d6-13"></td>
+                <td class="cell" id="d7-13"></td>
+                <td class="cell" id="d8-13"></td>
+                <td class="cell" id="d9-13"></td>
+                <td class="cell" id="d10-13"></td>
+                <td class="cell" id="d13-13"></td>
+                <td class="cell" id="d14-13"></td>
+                <td class="cell" id="d15-13"></td>
+                <td class="cell" id="d16-13"></td>
+                <td class="cell" id="d17-13"></td>
+                <td class="cell" id="d20-13"></td>
+                <td class="cell" id="d21-13"></td>
+                <td class="cell" id="d22-13"></td>
+                <td class="cell" id="d23-13"></td>
+                <td class="cell" id="d24-13"></td>
+                <td class="cell" id="d27-13"></td>
+                <td class="cell" id="d28-13"></td>
+                <td class="cell" id="d29-13"></td>
+                <td class="cell" id="d30-13"></td>
+                <td class="cell" id="d31-13"></td>
+            </tr>
+            <!-- 14-15 -->
+            <tr>
+                <td class="time-header">14-15</td>
+                <td class="blue cell" id="d1-14"><span>6</span></td>
+                <td class="green-dark cell" id="d2-14"><span>7</span></td>
+                <td class="gray cell" id="d3-14"><span>3</span></td>
+                <td class="red-brick cell" id="d6-14"><span>9</span></td>
+                <td class="red-brick cell" id="d7-14"><span>9</span></td>
+                <td class="green-dark cell" id="d8-14"><span>7</span></td>
+                <td class="green-dark cell" id="d9-14"><span>7</span></td>
+                <td class="blue cell" id="d10-14"><span>6</span></td>
+                <td class="brown cell" id="d13-14"><span>MTCPL</span></td>
+                <td class="yellow cell" id="d14-14"><span>4</span></td>
+                <td class="blue cell" id="d15-14"><span>6</span></td>
+                <td class="cell" id="d16-14"></td>
+                <td class="pink cell" id="d17-14"><span>CD3A</span></td>
+                <td class="purple cell" id="d20-14"><span>2</span></td>
+                <td class="green-light cell" id="d21-14"><span>CLCP</span></td>
+                <td class="purple cell" id="d22-14"><span>2</span></td>
+                <td class="pink cell" id="d23-14"><span>CD3A</span></td>
+                <td class="orange cell" id="d24-14"><span>CE3C</span></td>
+                <td class="green-dark cell" id="d27-14"><span>7</span></td>
+                <td class="purple cell" id="d28-14"><span>18</span></td>
+                <td class="yellow cell" id="d29-14"><span>15</span></td>
+                <td class="gray cell" id="d30-14"><span>CLC3A</span></td>
+                <td class="cell" id="d31-14"></td>
+            </tr>
+            <!-- 15-16 -->
+            <tr>
+                <td class="time-header">15-16</td>
+                <td class="blue cell" id="d1-15"><span>6</span></td>
+                <td class="green-dark cell" id="d2-15"><span>7</span></td>
+                <td class="gray cell" id="d3-15"><span>3</span></td>
+                <td class="red-brick cell" id="d6-15"><span>9</span></td>
+                <td class="red-brick cell" id="d7-15"><span>9</span></td>
+                <td class="green-dark cell" id="d8-15"><span>7</span></td>
+                <td class="green-dark cell" id="d9-15"><span>7</span></td>
+                <td class="blue cell" id="d10-15"><span>6</span></td>
+                <td class="purple cell" id="d13-15"><span>MTC3</span></td>
+                <td class="yellow cell" id="d14-15"><span>4</span></td>
+                <td class="blue cell" id="d15-15"><span>6</span></td>
+                <td class="cell" id="d16-15"></td>
+                <td class="pink cell" id="d17-15"><span>CD3A</span></td>
+                <td class="purple cell" id="d20-15"><span>2</span></td>
+                <td class="green-light cell" id="d21-15"><span>CLC3</span></td>
+                <td class="purple cell" id="d22-15"><span>18</span></td>
+                <td class="pink cell" id="d23-15"><span>CD3A</span></td>
+                <td class="orange cell" id="d24-15"><span>CE3C</span></td>
+                <td class="green-dark cell" id="d27-15"><span>7</span></td>
+                <td class="purple cell" id="d28-15"><span>18</span></td>
+                <td class="yellow cell" id="d29-15"><span>15</span></td>
+                <td class="gray cell" id="d30-15"><span>CLC3A</span></td>
+                <td class="cell" id="d31-15"></td>
+            </tr>
+            <!-- 16-17 -->
+            <tr>
+                <td class="time-header">16-17</td>
+                <td class="blue cell" id="d1-16"><span>6</span></td>
+                <td class="green-dark cell" id="d2-16"><span>7</span></td>
+                <td class="gray cell" id="d3-16"><span>3</span></td>
+                <td class="red-brick cell" id="d6-16"><span>9</span></td>
+                <td class="red-brick cell" id="d7-16"><span>9</span></td>
+                <td class="green-dark cell" id="d8-16"><span>7</span></td>
+                <td class="green-dark cell" id="d9-16"><span>7</span></td>
+                <td class="blue cell" id="d10-16"><span>6</span></td>
+                <td class="purple cell" id="d13-16"><span>MTC3</span></td>
+                <td class="yellow cell" id="d14-16"><span>4</span></td>
+                <td class="blue cell" id="d15-16"><span>6</span></td>
+                <td class="cell" id="d16-16"></td>
+                <td class="pink cell" id="d17-16"><span>CD3A</span></td>
+                <td class="purple cell" id="d20-16"><span>2</span></td>
+                <td class="green-light cell" id="d21-16"><span>CLC3</span></td>
+                <td class="purple cell" id="d22-16"><span>18</span></td>
+                <td class="pink cell" id="d23-16"><span>CD3A</span></td>
+                <td class="orange cell" id="d24-16"><span>CE3C</span></td>
+                <td class="yellow cell" id="d27-16"><span>15</span></td>
+                <td class="purple cell" id="d28-16"><span>18</span></td>
+                <td class="yellow cell" id="d29-16"><span>15</span></td>
+                <td class="gray cell" id="d30-16"><span>CLC3A</span></td>
+                <td class="cell" id="d31-16"></td>
+            </tr>
+            <!-- 17-18 -->
+            <tr>
+                <td class="time-header">17-18</td>
+                <td class="cell" id="d1-17"></td>
+                <td class="cell" id="d2-17"></td>
+                <td class="cell" id="d3-17"></td>
+                <td class="cell" id="d6-17"></td>
+                <td class="cell" id="d7-17"></td>
+                <td class="cell" id="d8-17"></td>
+                <td class="cell" id="d9-17"></td>
+                <td class="cell" id="d10-17"></td>
+                <td class="cell" id="d13-17"></td>
+                <td class="cell" id="d14-17"></td>
+                <td class="cell" id="d15-17"></td>
+                <td class="cell" id="d16-17"></td>
+                <td class="cell" id="d17-17"></td>
+                <td class="cell" id="d20-17"></td>
+                <td class="cell" id="d21-17"></td>
+                <td class="cell" id="d22-17"></td>
+                <td class="cell" id="d23-17"></td>
+                <td class="cell" id="d24-17"></td>
+                <td class="cell" id="d27-17"></td>
+                <td class="cell" id="d28-17"></td>
+                <td class="cell" id="d29-17"></td>
+                <td class="cell" id="d30-17"></td>
+                <td class="cell" id="d31-17"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Legenda -->
+<div class="legend">
+    <div class="legend-title">Legenda de Cores:</div>
+    <div class="legend-item"><div class="legend-color green-light"></div> Verde claro/escuro: CPSA / CEPL / CLCP / CLC3</div>
+    <div class="legend-item"><div class="legend-color orange"></div> Laranja: CE3C / CE3A</div>
+    <div class="legend-item"><div class="legend-color blue"></div> Azul: 6</div>
+    <div class="legend-item"><div class="legend-color green-dark"></div> Verde: 7</div>
+    <div class="legend-item"><div class="legend-color red-brick"></div> Vermelho tijolo: 9</div>
+    <div class="legend-item"><div class="legend-color purple"></div> Roxo/magenta: 2 / 18 / MTC3 / MTC3C</div>
+    <div class="legend-item"><div class="legend-color yellow"></div> Amarelo: 4 / 15</div>
+    <div class="legend-item"><div class="legend-color pink"></div> Rosa choque: CD3A</div>
+    <div class="legend-item"><div class="legend-color brown"></div> Castanho claro: MTCPL</div>
+    <div class="legend-item"><div class="legend-color gray"></div> Cinza/Branco com número: 3 / CLC3A</div>
+</div>
+
+<!-- Footer -->
+<footer>
+    © 2025 Formação Profissional para o Mercado de Trabalho | Curso de Operador de Distribuição Nível 2<br>
+    Email: <a href="mailto:aprendizagem.pt@gmail.com">aprendizagem.pt@gmail.com</a>
+</footer>
+
+<script>
+/* ---------- CONFIG ---------- */
+// horas consideradas blocos de aula (exclui 13 = almoço)
+const classHours = [9,10,11,12,14,15,16];
+// se true, agrupa blocos consecutivos do mesmo módulo e mostra uma contagem até ao fim do bloco
+const GROUP_CONSECUTIVE_BLOCKS = false;
+
+/* ---------- UTILS HORA LISBOA (robusto) ---------- */
+function getLisbonTime() {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Lisbon',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+    }).formatToParts(new Date());
+    const obj = {};
+    for (const p of parts) if (p.type !== 'literal') obj[p.type] = p.value;
+    return new Date(
+        parseInt(obj.year,10),
+        parseInt(obj.month,10)-1,
+        parseInt(obj.day,10),
+        parseInt(obj.hour,10),
+        parseInt(obj.minute,10),
+        parseInt(obj.second,10)
+    );
+}
+
+/* ---------- LÊ MÊS/ANO EXIBIDOS NA TABELA ---------- */
+function getDisplayedMonthYear() {
+    // Espera encontrar .month-col .month (texto do mês) e .month-col .year (ano)
+    const monthTextEl = document.querySelector('.month-col .month');
+    const yearEl = document.querySelector('.month-col .year');
+    let year = (yearEl && parseInt(yearEl.textContent.trim(),10)) || (new Date()).getFullYear();
+    let monthIndex = (new Date()).getMonth(); // fallback: mês atual
+
+    if (monthTextEl) {
+        const txt = monthTextEl.textContent.trim().toLowerCase();
+        // mapeamento abreviações PT -> índice 0-11
+        const map = {
+            'jan':0,'fev':1,'mar':2,'abr':3,'mai':4,'jun':5,
+            'jul':6,'ago':7,'set':8,'out':9,'nov':10,'dez':11,
+            'janeiro':0,'fevereiro':1,'março':2,'marco':2,'abril':3,'maio':4,'junho':5,
+            'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11
+        };
+        // tenta várias formas de matching (3 letras, completo)
+        const key3 = txt.slice(0,3);
+        if (map[key3] !== undefined) monthIndex = map[key3];
+        else if (map[txt] !== undefined) monthIndex = map[txt];
+    }
+    return { monthIndex, year };
+}
+
+/* ---------- INICIALIZA CONTAINERS DE CONTAGEM NAS CÉLULAS ---------- */
+function initCellCountdowns() {
+    // Seleciona todas as células com id no formato d<day>-<hour>
+    const cells = document.querySelectorAll('td.cell[id^="d"]');
+    cells.forEach(cell => {
+        if (!cell.querySelector('.cell-countdown')) {
+            const div = document.createElement('div');
+            div.className = 'cell-countdown';
+            div.style.fontSize = '11px';
+            div.style.marginTop = '4px';
+            div.style.fontWeight = 'normal';
+            div.style.opacity = '0.95';
+            div.textContent = '';
+            cell.appendChild(div);
+        }
+    });
+}
+initCellCountdowns();
+
+/* ---------- PARSERS ---------- */
+function parseCellId(cellId) {
+    // id exemplo: d2-9 ou d30-16
+    const m = cellId.match(/^d(\d{1,2})-(\d{1,2})$/);
+    if (!m) return null;
+    return { day: parseInt(m[1],10), hour: parseInt(m[2],10) };
+}
+
+/* ---------- AGRUPAR BLOCOS CONSECUTIVOS (opcional) ---------- */
+function computeConsecutiveBlocks(displayMonth, displayYear) {
+    // Retorna um objecto { startMs, endMs, name, cellIds: [] } por cada sequência de células do mesmo módulo
+    // só se GROUP_CONSECUTIVE_BLOCKS === true
+    if (!GROUP_CONSECUTIVE_BLOCKS) return null;
+
+    const mapByDay = {};
+    document.querySelectorAll('td.cell[id^="d"]').forEach(cell => {
+        const info = parseCellId(cell.id);
+        if (!info) return;
+        if (!cell.querySelector('span') || !cell.querySelector('span').textContent.trim()) return;
+        const name = cell.querySelector('span').textContent.trim();
+        const key = `${info.day}`;
+        if (!mapByDay[key]) mapByDay[key] = [];
+        mapByDay[key].push({ hour: info.hour, name, id: cell.id });
+    });
+
+    const blocks = [];
+    for (const dayKey of Object.keys(mapByDay)) {
+        const arr = mapByDay[dayKey].sort((a,b)=>a.hour-b.hour);
+        let cur = null;
+        for (const it of arr) {
+            if (!cur) {
+                cur = { startHour: it.hour, endHour: it.hour+1, name: it.name, day: parseInt(dayKey,10), ids: [it.id] };
+            } else {
+                if (it.name === cur.name && it.hour === cur.endHour) {
+                    cur.endHour = it.hour + 1;
+                    cur.ids.push(it.id);
+                } else {
+                    // flush
+                    const startMs = new Date(displayYear, displayMonth, cur.day, cur.startHour,0,0).getTime();
+                    const endMs = new Date(displayYear, displayMonth, cur.day, cur.endHour,0,0).getTime();
+                    blocks.push({ startMs, endMs, name: cur.name, ids: cur.ids, day: cur.day, startHour: cur.startHour, endHour: cur.endHour });
+                    cur = { startHour: it.hour, endHour: it.hour+1, name: it.name, day: parseInt(dayKey,10), ids: [it.id] };
+                }
+            }
+        }
+        if (cur) {
+            const startMs = new Date(displayYear, displayMonth, cur.day, cur.startHour,0,0).getTime();
+            const endMs = new Date(displayYear, displayMonth, cur.day, cur.endHour,0,0).getTime();
+            blocks.push({ startMs, endMs, name: cur.name, ids: cur.ids, day: cur.day, startHour: cur.startHour, endHour: cur.endHour });
+        }
+    }
+    return blocks;
+}
+
+/* ---------- ATUALIZAÇÃO POR CÉLULA ---------- */
+function updatePerCell(now, displayMonth, displayYear, consecutiveBlocks) {
+    // limpa blinking
+    document.querySelectorAll('.calendar td.cell').forEach(c => c.classList.remove('blinking'));
+
+    // itera todas as células com pattern id
+    document.querySelectorAll('td.cell[id^="d"]').forEach(cell => {
+        const parsed = parseCellId(cell.id);
+        if (!parsed) return;
+        const day = parsed.day;
+        const hour = parsed.hour;
+        const countdownEl = cell.querySelector('.cell-countdown');
+        const span = cell.querySelector('span');
+        // célula vazia = pausa
+        const isEmpty = !span || !span.textContent.trim();
+        if (isEmpty) {
+            if (countdownEl) countdownEl.textContent = '';
+            return;
+        }
+        // se usamos blocos consecutivos e esta célula pertence a um bloco, skipar aqui (será tratada pelos blocos)
+        if (consecutiveBlocks) {
+            const belongs = consecutiveBlocks.find(b => b.ids.includes(cell.id));
+            if (belongs) {
+                // limpar — bloco vai definir a contagem na célula principal (ou nas todas, conforme preferires)
+                countdownEl.textContent = '';
+                return;
+            }
+        }
+
+        // criar datas exibidas (usar mês/ano visiveis)
+        const start = new Date(displayYear, displayMonth, day, hour, 0, 0);
+        const end = new Date(displayYear, displayMonth, day, hour+1, 0, 0);
+
+        if (now >= start && now < end) {
+            // aula a decorrer -> pisca e mostra mm:ss até ao fim
+            const diffMs = end - now;
+            const mm = Math.floor((diffMs % (1000*60*60)) / (1000*60));
+            const ss = Math.floor((diffMs % (1000*60)) / 1000);
+            countdownEl.textContent = `Termina em ${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+            cell.classList.add('blinking');
+        } else if (now < start) {
+            // futuro -> se for hoje mostra X min, se for noutro dia mostra data/hora
+            if (now.getFullYear() === start.getFullYear() && now.getMonth() === start.getMonth() && now.getDate() === start.getDate()) {
+                // mesmo dia -> minutos até começar
+                const totalMin = Math.ceil((start - now) / 60000);
+                countdownEl.textContent = totalMin <= 60 ? `Começa em ${totalMin} min` : `Começa em ${Math.floor(totalMin/60)}h ${totalMin%60}m`;
+            } else {
+                countdownEl.textContent = `Começa dia ${String(day).padStart(2,'0')}/${String(displayMonth+1).padStart(2,'0')} às ${String(hour).padStart(2,'0')}:00`;
+            }
+        } else {
+            // hora passada -> limpar
+            countdownEl.textContent = '';
+        }
+    });
+}
+
+/* ---------- ATUALIZAÇÃO POR BLOCOS CONSECUTIVOS (opcional) ---------- */
+function updateConsecutiveBlocks(now, consecutiveBlocks) {
+    if (!consecutiveBlocks) return;
+    for (const b of consecutiveBlocks) {
+        // se agora estiver dentro do bloco
+        const blockStart = b.startMs;
+        const blockEnd = b.endMs;
+        const mainCellId = b.ids[0]; // vamos aplicar texto na primeira célula da sequência (podes mudar)
+        const mainCell = document.getElementById(mainCellId);
+        if (!mainCell) continue;
+        const countdownEl = mainCell.querySelector('.cell-countdown');
+        if (now.getTime() >= blockStart && now.getTime() < blockEnd) {
+            const diffMs = blockEnd - now;
+            const mm = Math.floor((diffMs % (1000*60*60)) / (1000*60));
+            const ss = Math.floor((diffMs % (1000*60)) / 1000);
+            countdownEl.textContent = `Termina às ${String(new Date(blockEnd).getHours()).padStart(2,'0')}:00 (${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')})`;
+            // piscar todas as células do bloco
+            b.ids.forEach(id => document.getElementById(id)?.classList.add('blinking'));
+        } else if (now.getTime() < blockStart) {
+            const totalMin = Math.ceil((blockStart - now.getTime()) / 60000);
+            countdownEl.textContent = totalMin <= 60 ? `Começa em ${totalMin} min` : `Começa dia ${String(b.day).padStart(2,'0')}/${String(new Date(b.startMs).getMonth()+1).padStart(2,'0')} às ${b.startHour}:00`;
+        } else {
+            countdownEl.textContent = '';
+        }
+    }
+}
+
+/* ---------- DISPLAY PRINCIPAL (topo) ---------- */
+function updateMainDisplay(now, consecutiveBlocks, displayMonth, displayYear) {
+    const clockDisplay = document.getElementById('clockDisplay');
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const date = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+    const dow = now.getDay();
+
+    const timeString = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}`;
+    const dateString = `${String(date).padStart(2,'0')}/${String(month).padStart(2,'0')}/${year}`;
+
+    // fim de semana
+    if (dow === 0 || dow === 6) {
+        const nextMonday = new Date(now);
+        nextMonday.setDate(now.getDate() + ((8 - now.getDay()) % 7 || 7));
+        const nd = nextMonday.getDate(), nm = nextMonday.getMonth()+1, ny = nextMonday.getFullYear();
+        clockDisplay.textContent = `Descanso. Próxima aula Segunda dia ${String(nd).padStart(2,'0')}/${String(nm).padStart(2,'0')}/${ny} às 09:00`;
+        return;
+    }
+
+    // almoço
+    if (hours === 13) {
+        clockDisplay.textContent = `${timeString} - Pausa para almoço. Próxima aula às 14:00`;
+        return;
+    }
+
+    // se dentro de um bloco consecutivo ativo, preferir mostrar info dele
+    if (consecutiveBlocks) {
+        const nowMs = now.getTime();
+        const activeBlock = consecutiveBlocks.find(b => nowMs >= b.startMs && nowMs < b.endMs);
+        if (activeBlock) {
+            const remainMs = activeBlock.endMs - nowMs;
+            const mm = Math.floor((remainMs % (1000*60*60)) / (1000*60));
+            const ss = Math.floor((remainMs % (1000*60)) / 1000);
+            clockDisplay.textContent = `${timeString} - Aula em curso ${activeBlock.name} (d${activeBlock.day}) — termina em ${mm}m ${ss}s`;
+            return;
+        }
+    }
+
+    // se está em aula normal (não bloco) verificar célula actual
+    if (classHours.includes(hours)) {
+        // procura célula para hoje nessa hora
+        const cellId = `d${date}-${hours}`;
+        const cell = document.getElementById(cellId);
+        if (cell && cell.querySelector('span') && cell.querySelector('span').textContent.trim()) {
+            const className = cell.querySelector('span').textContent.trim();
+            const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours+1, 0, 0);
+            const diff = end - now;
+            const mm = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const ss = Math.floor((diff % (1000*60)) / 1000);
+            clockDisplay.textContent = `${timeString} hoje ${dateString} - Aula: ${className} — termina em ${mm}m ${ss}s`;
+            return;
+        }
+    }
+
+    // caso contrário procurar a próxima aula nos próximos 7 dias (na tabela)
+    let next = null;
+    const { monthIndex: dMonth, year: dYear } = { monthIndex: displayMonth, year: displayYear };
+    // percorre células para achar a próxima
+    document.querySelectorAll('td.cell[id^="d"]').forEach(cell => {
+        if (next) return;
+        const parsed = parseCellId(cell.id);
+        if (!parsed) return;
+        const day = parsed.day;
+        const hour = parsed.hour;
+        const span = cell.querySelector('span');
+        if (!span || !span.textContent.trim()) return;
+        const start = new Date(dYear, dMonth, day, hour, 0, 0);
+        if (start.getTime() <= now.getTime()) return; // já passou
+        if (!next || start.getTime() < next.startMs) {
+            next = { startMs: start.getTime(), day, hour, name: span.textContent.trim(), month: dMonth+1, year: dYear };
+        }
+    });
+
+    if (!next) {
+        clockDisplay.textContent = `${timeString} - ${dateString} - Sem aulas programadas`;
+        return;
+    }
+
+    const diffMin = Math.ceil((next.startMs - now.getTime()) / 60000);
+    if (diffMin < 60 && (new Date(next.startMs).getDate() === now.getDate())) {
+        clockDisplay.textContent = `Descanso. Próxima aula ${next.name} hoje às ${String(next.hour).padStart(2,'0')}:00. Faltam ${diffMin} minutos.`;
+    } else {
+        const nds = `${String(next.day).padStart(2,'0')}/${String(next.month).padStart(2,'0')}/${next.year}`;
+        const h = Math.floor(diffMin / 60), m = diffMin % 60;
+        clockDisplay.textContent = `Descanso. Próxima aula ${next.name} dia ${nds} às ${String(next.hour).padStart(2,'0')}:00. Faltam ${h} horas e ${m} minutos.`;
+    }
+}
+
+/* ---------- LOOP PRINCIPAL ---------- */
+function mainTick() {
+    const now = getLisbonTime();
+    // lê mês/ano exibidos (caso atualizes a tabela para o mês novo, isto garante que as datas construídas reflectem o mês mostrado)
+    const { monthIndex: displayMonth, year: displayYear } = getDisplayedMonthYear();
+
+    initCellCountdowns(); // garante containers (não faz mal chamar repetidamente)
+
+    // se agrupamento activo, computa blocos
+    const consecutiveBlocks = GROUP_CONSECUTIVE_BLOCKS ? computeConsecutiveBlocks(displayMonth, displayYear) : null;
+
+    // actualizar por célula (e/ou por blocos)
+    updatePerCell(now, displayMonth, displayYear, consecutiveBlocks);
+    if (GROUP_CONSECUTIVE_BLOCKS) updateConsecutiveBlocks(now, consecutiveBlocks);
+
+    // actualizar o display principal
+    updateMainDisplay(now, consecutiveBlocks, displayMonth, displayYear);
+
+    // actualizar relógio digital se existir
+    const digital = document.getElementById('digitalClock');
+    if (digital) {
+        const hh = String(now.getHours()).padStart(2,'0'),
+              mm = String(now.getMinutes()).padStart(2,'0'),
+              ss = String(now.getSeconds()).padStart(2,'0');
+        digital.textContent = `${hh}:${mm}:${ss}`;
+    }
+}
+
+// start
+mainTick();
+setInterval(mainTick, 1000);
+
+/* ---------- MANTER DOWNLOAD PDF ---------- */
+document.getElementById('downloadPdf')?.addEventListener('click', function() {
+    if (!window.html2canvas || !window.jspdf) {
+        alert('Bibliotecas html2canvas / jsPDF em falta.');
+        return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape','mm','a4');
+    const table = document.querySelector('.calendar');
+    const width = doc.internal.pageSize.getWidth();
+    const height = doc.internal.pageSize.getHeight();
+    html2canvas(table).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = width - 20;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+        doc.save('Horario_Outubro_2025.pdf');
+    });
+});
+</script>
+
+
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
